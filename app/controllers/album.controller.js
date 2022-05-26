@@ -29,8 +29,8 @@ exports.create = (req, res) => {
 };
 // Retrieve all Albums from the database.
 exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+  const name = req.query.name;
+  var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
   Album.findAll({ where: condition })
     .then(data => {
       res.send(data);
