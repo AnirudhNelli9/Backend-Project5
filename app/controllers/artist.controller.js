@@ -1,5 +1,5 @@
 const db = require("../models");
-const Lesson = db.lessons;
+const Artist = db.artists;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Artist

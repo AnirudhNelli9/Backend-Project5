@@ -1,8 +1,7 @@
 module.exports = app => {
   const lessons = require("../controllers/artist.controller.js");
   var router = require("express").Router();
-  // Create a new Lesson for a Tutorial
-  router.post("/:tutorialId/lessons/", lessons.create);
+  router.post("/artists/:artistId/albums", albums.create);
   // Retrieve all Lessons for a Tutorial
   router.get("/:tutorialId/lessons/", lessons.findAll);
   // Retrieve all published Lessons for a Tutorial
