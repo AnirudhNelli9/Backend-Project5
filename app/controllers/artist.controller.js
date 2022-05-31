@@ -28,6 +28,30 @@ exports.create = (req, res) => {
       });
   };
 
+  // Update a Artist by the id in the request
+  exports.update = (req, res) => {
+    const id = req.params.id;
+    Artist.update(req.body, {
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Artist was updated successfully."
+          });
+        } else {
+          res.send({
+            message: `Cannot update Artist with id=${id}. Maybe Artist was not found or req.body is empty!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error updating Artist with id=" + id
+        });
+      });
+  };
+
   exports.delete = (req, res) => {
     const id = req.params.id;
     Artist.destroy({
