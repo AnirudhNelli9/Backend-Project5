@@ -4,7 +4,8 @@ module.exports = app => {
     
     router.post("/albums/:albumId/tracks", tracks.create);
     
-    
+    //update track information
+    router.patch("/tracks/:trackId", tracks.update);
 
 
 
