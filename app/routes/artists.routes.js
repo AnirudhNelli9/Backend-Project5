@@ -4,7 +4,7 @@ module.exports = app => {
   // Create a new Artist
   router.post("/", artists.create);
   // Retrieve all Tutorials
-  router.get("/", tutorials.findAll);
+  router.get("/", artists.findAll);
   // Retrieve all published Tutorials
   router.get("/published", tutorials.findAllPublished);
   // Retrieve a single Tutorial with id

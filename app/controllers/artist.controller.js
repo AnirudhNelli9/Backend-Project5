@@ -28,6 +28,48 @@ exports.create = (req, res) => {
       });
   };
 
+  // Retrieve all Albums from the database.
+  exports.findAll = (req, res) => {
+    const title = req.query.title;
+    var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+    Album.findAll({ where: condition },
+        )
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving Albums."
+        });
+      });
+  };
+  //const 
+  exports.getAlbumsByArtistId = (req, res) => {
+  const { artistId } = req.params;
+
+  Artist.findByPk(artistId).then((artist) => {
+    if (!artist) {
+      res.status(404).json({ error: "The artist could not be found." });
+    } else {
+      Album.findAll({
+        where: { artistId: artistId },
+        include: [
+          {
+            model: Artist,
+            as: "artist",
+          },
+        ],
+      })
+        .then((albums) => {
+          res.status(200).json(albums);
+        })
+        .catch(console.error);
+    }
+  });
+};
+
+
   // Update a Artist by the id in the request
   exports.update = (req, res) => {
     const id = req.params.id;
