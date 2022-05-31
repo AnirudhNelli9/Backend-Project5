@@ -53,6 +53,22 @@ exports.create = (req, res) => {
         });
       });
   };
+   // Delete all Tracks from the database.
+   exports.deleteAll = (req, res) => {
+    Track.destroy({
+      where: {},
+      truncate: false
+    })
+      .then(nums => {
+        res.send({ message: `${nums} Tracks were deleted successfully!` });
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while removing all Tracks."
+        });
+      });
+  };
   // Update a Track by the id in the request
   exports.update = (req, res) => {
     const id = req.params.id;
