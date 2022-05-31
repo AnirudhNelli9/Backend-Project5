@@ -13,6 +13,6 @@ module.exports = app => {
   // Delete album with album id
   router.delete("/albums/:albumId", albums.deleteAlbum);
   // Delete all Lessons
-  router.delete("/:tutorialId/lessons/:id", lessons.deleteAll);
+  router.delete("/albums/all", albums.deleteAll);
   app.use('/api/tutorials', router);
 };
