@@ -8,8 +8,8 @@ module.exports = app => {
   router.get("/:tutorialId/lessons/published", lessons.findAllPublished);
   // Retrieve a single Lesson with id
   router.get("/:tutorialId/lessons/:id", lessons.findOne);
-  // Update a Lesson with id
-  router.put("/:tutorialId/lessons/:id", lessons.update);
+  // Update a album with id
+  router.patch("/albums/:albumId", albums.update);
   // Delete album with album id
   router.delete("/albums/:albumId", albums.deleteAlbum);
   // Delete all Lessons
