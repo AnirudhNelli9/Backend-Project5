@@ -5,5 +5,11 @@ module.exports = app => {
     router.post("/albums/:albumId/tracks", tracks.create);
     
     
+
+
+
+
+
+    router.delete("/tracks/:trackId", tracks.deleteTrack);
     app.use('/api', router);
   };
