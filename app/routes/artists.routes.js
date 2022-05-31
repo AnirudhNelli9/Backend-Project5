@@ -1,8 +1,8 @@
 module.exports = app => {
   const tutorials = require("../controllers/album.controller.js");
   var router = require("express").Router();
-  // Create a new Tutorial
-  router.post("/", tutorials.create);
+    // Create a new Artist
+    router.post("/", artists.create);
   // Retrieve all Tutorials
   router.get("/", tutorials.findAll);
   // Retrieve all published Tutorials
