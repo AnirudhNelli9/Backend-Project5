@@ -28,7 +28,70 @@ exports.create = (req, res) => {
       }
     });
   };
- 
+ // Retrieve all Tracks from the database.
+ exports.findAll = (req, res) => {
+  const title = req.query.title;
+  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+  Track.findAll({ where: condition },
+      )
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Tracks."
+      });
+    });
+};
+//const 
+exports.getTracksByAlbumId = (req, res) => {
+const { albumId } = req.params;
+
+Album.findByPk(albumId).then((album) => {
+  if (!album) {
+    res.status(404).json({ error: "The album could not be found." });
+  } else {
+    Track.findAll({
+      where: { albumId: albumId },
+      include: [
+        {
+          model: Album,
+          as: "album",
+        },
+      ],
+    })
+      .then((tracks) => {
+        res.status(200).json(tracks);
+      })
+      .catch(console.error);
+  }
+});
+};
+exports.getTracksByArtistId = (req, res) => {
+const { artistId } = req.params;
+
+Artist.findByPk(artistId).then((artist) => {
+  if (!artist) {
+    res.status(404).json({ error: "The artist could not be found." });
+  } else {
+    Track.findAll({
+      where: { artistId: artistId },
+      include: [
+        {
+          model: Artist,
+          as: "artist",
+        },
+      ],
+    })
+      .then((tracks) => {
+        res.status(200).json(tracks);
+      })
+      .catch(console.error);
+  }
+});
+};
+
 
   // Delete a Track with the specified id in the request
   exports.deleteTrack = (req, res) => {

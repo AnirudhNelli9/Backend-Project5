@@ -3,7 +3,8 @@ module.exports = app => {
     var router = require("express").Router();
     
     router.post("/albums/:albumId/tracks", tracks.create);
-    
+    router.get("/tracks", tracks.findAll);
+
     //update track information
     router.patch("/tracks/:trackId", tracks.update);
 
