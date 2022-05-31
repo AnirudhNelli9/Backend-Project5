@@ -4,8 +4,7 @@ module.exports = app => {
   router.post("/artists/:artistId/albums", albums.create);
   // Retrieve all Lessons for a Tutorial
   router.get("/:tutorialId/lessons/", lessons.findAll);
-  // Retrieve all published Lessons for a Tutorial
-  router.get("/:tutorialId/lessons/published", lessons.findAllPublished);
+  router.get("/albums", albums.findAll);
   // Retrieve a single Lesson with id
   router.get("/:tutorialId/lessons/:id", lessons.findOne);
   // Update a album with id
