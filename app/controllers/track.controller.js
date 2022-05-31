@@ -53,3 +53,26 @@ exports.create = (req, res) => {
         });
       });
   };
+  // Update a Track by the id in the request
+  exports.update = (req, res) => {
+    const id = req.params.id;
+    Track.update(req.body, {
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Track was updated successfully."
+          });
+        } else {
+          res.send({
+            message: `Cannot update Track with id=${id}. Maybe Track was not found or req.body is empty!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error updating Track with id=" + id
+        });
+      });
+  };
