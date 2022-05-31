@@ -27,17 +27,27 @@ exports.create = (req, res) => {
     });
   };
  
-//   const list = (req, res) => {
-//     Album.findAll({
-//       include: [
-//         {
-//           model: Artist,
-//           as: "artist",
-//         },
-//       ],
-//     }).then((albums) => {
-//       res.status(200).json(albums);
-//     });
-//   };
+  exports.deleteAlbum = (req, res) => {
+    const id = req.params.id;
+    Album.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Album was deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete Album with id=${id}. Maybe Album was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete Album with id=" + id
+        });
+      });
+  };
   
 

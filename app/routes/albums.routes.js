@@ -10,8 +10,8 @@ module.exports = app => {
   router.get("/:tutorialId/lessons/:id", lessons.findOne);
   // Update a Lesson with id
   router.put("/:tutorialId/lessons/:id", lessons.update);
-  // Delete a Lesson with id
-  router.delete("/:tutorialId/lessons/:id", lessons.delete);
+  // Delete album with album id
+  router.delete("/albums/:albumId", albums.deleteAlbum);
   // Delete all Lessons
   router.delete("/:tutorialId/lessons/:id", lessons.deleteAll);
   app.use('/api/tutorials', router);
