@@ -67,7 +67,7 @@ exports.create = (req, res) => {
   });
 };
 
-  // Find a single Album with an id
+  // Search for an Album with an id 
   exports.findOne = (req, res) => {
     const id = req.params.id;
     Album.findByPk(id)
