@@ -27,6 +27,25 @@ exports.create = (req, res) => {
         });
       });
   };
+  // Choose a single Artist with an id
+  exports.findOne = (req, res) => {
+    const id = req.params.id;
+    Artist.findByPk(id)
+      .then(data => {
+        if (data) {
+          res.send(data);
+        } else {
+          res.status(404).send({
+            message: `Cannot find Artist with id=${id}.`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error retrieving Artist with id=" + id
+        });
+      });
+  };
 
   // Update a Artist by the id in the request
   exports.update = (req, res) => {
