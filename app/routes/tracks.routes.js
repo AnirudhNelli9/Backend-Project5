@@ -7,6 +7,7 @@ module.exports = app => {
 
     //update track information
     router.patch("/tracks/:trackId", tracks.update);
+    router.get("/tracks", tracks.getTracksByAlbumId);
 
     router.delete("/tracks/:trackId", tracks.deleteTrack);
     router.delete("/tracks/all", tracks.deleteAll);
