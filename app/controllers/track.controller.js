@@ -149,4 +149,3 @@ Track.create(track)
             err.message || "Some error occurred while removing all Tracks."
         });
       });
-  };
