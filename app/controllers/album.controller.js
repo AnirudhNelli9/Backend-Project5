@@ -4,29 +4,30 @@ const Album = db.albums;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
-    const { artistId } = req.params;
-  
-    Artist.findByPk(artistId).then((artist) => {
-      if (!artist) {
-        res.status(404).json({ error: "The artist could not be found." });
-      } else {
-        Album.create({
-          title: req.body.title,
-          artistId: artistId
-
-        }).then(data => {
-            res.send(data);
-          })
-          .catch(err => {
-            res.status(500).send({
-              message:
-                err.message || "Some error occurred while creating the Artist."
-            });
-        });
-      }
+  // Validate request
+  if (!req.body.title) {
+    res.status(400).send({
+      message: "Content can not be empty!"
     });
-  };
- 
+    return;
+  }
+const album = {
+  artistId: req.body.artistId,
+  title: req.body.title
+};
+Album.create(album)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the Album."
+      });
+    });
+};
+
+  // Retrieve all Albums from the database.
   exports.findAll = (req, res) => {
     const title = req.query.title;
     var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
@@ -67,7 +68,7 @@ exports.create = (req, res) => {
   });
 };
 
-  // Search for an Album with an id 
+  // Find a single Album with an id
   exports.findOne = (req, res) => {
     const id = req.params.id;
     Album.findByPk(id)
@@ -86,7 +87,30 @@ exports.create = (req, res) => {
         });
       });
   };
-
+  // Update a Album by the id in the request
+  exports.update = (req, res) => {
+    const id = req.params.id;
+    Album.update(req.body, {
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Album was updated successfully."
+          });
+        } else {
+          res.send({
+            message: `Cannot update Album with id=${id}. Maybe Album was not found or req.body is empty!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error updating Album with id=" + id
+        });
+      });
+  };
+  // Delete a Album with the specified id in the request
   exports.deleteAlbum = (req, res) => {
     const id = req.params.id;
     Album.destroy({
@@ -122,30 +146,6 @@ exports.create = (req, res) => {
         res.status(500).send({
           message:
             err.message || "Some error occurred while removing all Albums."
-        });
-      });
-  };
-  
-  // Update a Track by the id in the request
-  exports.update = (req, res) => {
-    const id = req.params.id;
-    Track.update(req.body, {
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "Track was updated successfully."
-          });
-        } else {
-          res.send({
-            message: `Cannot update Track with id=${id}. Maybe Track was not found or req.body is empty!`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Error updating Track with id=" + id
         });
       });
   };

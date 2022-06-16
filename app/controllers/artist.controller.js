@@ -27,7 +27,40 @@ exports.create = (req, res) => {
         });
       });
   };
-
+  // Retrieve all Artists from the database.
+  exports.findAll = (req, res) => {
+    const title = req.query.title;
+    var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+    Artist.findAll({ where: condition })
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving artists."
+        });
+      });
+  };
+  // Find a single Artist with an id
+  exports.findOne = (req, res) => {
+    const id = req.params.id;
+    Artist.findByPk(id)
+      .then(data => {
+        if (data) {
+          res.send(data);
+        } else {
+          res.status(404).send({
+            message: `Cannot find Artist with id=${id}.`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error retrieving Artist with id=" + id
+        });
+      });
+  };
   // Update a Artist by the id in the request
   exports.update = (req, res) => {
     const id = req.params.id;
@@ -51,7 +84,7 @@ exports.create = (req, res) => {
         });
       });
   };
-
+  // Delete a Artist with the specified id in the request
   exports.delete = (req, res) => {
     const id = req.params.id;
     Artist.destroy({
@@ -87,29 +120,6 @@ exports.create = (req, res) => {
         res.status(500).send({
           message:
             err.message || "Some error occurred while removing all artists."
-        });
-      });
-  };
-  // Update a Track by the id in the request
-  exports.update = (req, res) => {
-    const id = req.params.id;
-    Track.update(req.body, {
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "Track was updated successfully."
-          });
-        } else {
-          res.send({
-            message: `Cannot update Track with id=${id}. Maybe Track was not found or req.body is empty!`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Error updating Track with id=" + id
         });
       });
   };

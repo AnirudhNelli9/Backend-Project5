@@ -1,134 +1,90 @@
 const db = require("../models");
-const Artist = db.artists;
 const Album = db.albums;
 const Track = db.tracks;
 const Op = db.Sequelize.Op;
 
-
 exports.create = (req, res) => {
-    const { albumId } = req.params;
-  
-    Album.findByPk(albumId).then((album) => {
-      if (!album) {
-        res.status(404).json({ error: "The album could not be found." });
-      } else {
-        Track.create({
-          title: req.body.title,
-          year:req.body.year,
-          albumId: albumId
-        }).then(data => {
-            res.send(data);
-          })
-          .catch(err => {
-            res.status(500).send({
-              message:
-                err.message || "Some error occurred while creating the Album."
-            });
-        });
-      }
+  // Validate request
+  if (!req.body.title || !req.body.title) {
+    res.status(400).send({
+      message: "Content can not be empty!"
     });
-  };
- // Retrieve all Tracks from the database.
- exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
-  Track.findAll({ where: condition },
-      )
+    return;
+  }
+const track = {
+  albumId: req.body.albumId,
+  title: req.body.title,
+  year: req.body.year,
+};
+Track.create(track)
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving Tracks."
+          err.message || "Some error occurred while creating the Track."
       });
     });
 };
-//const 
-exports.getTracksByAlbumId = (req, res) => {
-const { albumId } = req.params;
 
-Album.findByPk(albumId).then((album) => {
-  if (!album) {
-    res.status(404).json({ error: "The album could not be found." });
-  } else {
-    Track.findAll({
-      where: { albumId: albumId },
-      include: [
-        {
-          model: Album,
-          as: "album",
-        },
-      ],
-    })
-      .then((tracks) => {
-        res.status(200).json(tracks);
+  // Retrieve all Tracks from the database.
+  exports.findAll = (req, res) => {
+    const title = req.query.title;
+    var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+    Track.findAll({ where: condition },
+        )
+      .then(data => {
+        res.send(data);
       })
-      .catch(console.error);
-  }
-});
-};
-exports.getTracksByArtistId = (req, res) => {
-const { artistId } = req.params;
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving Tracks."
+        });
+      });
+  };
+  //const 
+  exports.getTracksByAlbumId = (req, res) => {
+  const { albumId } = req.params;
 
-Artist.findByPk(artistId).then((artist) => {
-  if (!artist) {
-    res.status(404).json({ error: "The artist could not be found." });
-  } else {
-    Track.findAll({
-      where: { artistId: artistId },
-      include: [
-        {
-          model: Artist,
-          as: "artist",
-        },
-      ],
-    })
-      .then((tracks) => {
-        res.status(200).json(tracks);
+  Album.findByPk(albumId).then((album) => {
+    if (!album) {
+      res.status(404).json({ error: "The album could not be found." });
+    } else {
+      Track.findAll({
+        where: { albumId: albumId },
+        include: [
+          {
+            model: Album,
+            as: "album",
+          },
+        ],
       })
-      .catch(console.error);
-  }
-});
+        .then((tracks) => {
+          res.status(200).json(tracks);
+        })
+        .catch(console.error);
+    }
+  });
 };
 
-
-  // Delete a Track with the specified id in the request
-  exports.deleteTrack = (req, res) => {
+  // Find a single Track with an id
+  exports.findOne = (req, res) => {
     const id = req.params.id;
-    Track.destroy({
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "Track was deleted successfully!"
-          });
+    Track.findByPk(id)
+      .then(data => {
+        if (data) {
+          res.send(data);
         } else {
-          res.send({
-            message: `Cannot delete Track with id=${id}. Maybe Track was not found!`
+          res.status(404).send({
+            message: `Cannot find Track with id=${id}.`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Could not delete Track with id=" + id
-        });
-      });
-  };
-   // Delete all Tracks from the database.
-   exports.deleteAll = (req, res) => {
-    Track.destroy({
-      where: {},
-      truncate: false
-    })
-      .then(nums => {
-        res.send({ message: `${nums} Tracks were deleted successfully!` });
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while removing all Tracks."
+          message: "Error retrieving Track with id=" + id
         });
       });
   };
@@ -152,6 +108,45 @@ Artist.findByPk(artistId).then((artist) => {
       .catch(err => {
         res.status(500).send({
           message: "Error updating Track with id=" + id
+        });
+      });
+  };
+  // Delete a Track with the specified id in the request
+  exports.deleteTrack = (req, res) => {
+    const id = req.params.id;
+    Track.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Track was deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete Track with id=${id}. Maybe Track was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete Track with id=" + id
+        });
+      });
+  };
+  // Delete all Tracks from the database.
+  exports.deleteAll = (req, res) => {
+    Track.destroy({
+      where: {},
+      truncate: false
+    })
+      .then(nums => {
+        res.send({ message: `${nums} Tracks were deleted successfully!` });
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while removing all Tracks."
         });
       });
   };
