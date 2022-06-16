@@ -27,7 +27,7 @@ exports.create = (req, res) => {
         });
       });
   };
-  // Choose a single Artist with an id
+
   exports.findOne = (req, res) => {
     const id = req.params.id;
     Artist.findByPk(id)
@@ -70,7 +70,7 @@ exports.create = (req, res) => {
         });
       });
   };
-
+  // Delete a Artist with the specified id in the request
   exports.delete = (req, res) => {
     const id = req.params.id;
     Artist.destroy({
@@ -106,29 +106,6 @@ exports.create = (req, res) => {
         res.status(500).send({
           message:
             err.message || "Some error occurred while removing all artists."
-        });
-      });
-  };
-  // Update a Track by the id in the request
-  exports.update = (req, res) => {
-    const id = req.params.id;
-    Track.update(req.body, {
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "Track was updated successfully."
-          });
-        } else {
-          res.send({
-            message: `Cannot update Track with id=${id}. Maybe Track was not found or req.body is empty!`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Error updating Track with id=" + id
         });
       });
   };

@@ -20,8 +20,8 @@ db.sequelize.sync();
 
 //While developing
 //db.sequelize.sync({ force: true }).then(() => {
- //   console.log("Drop and re-sync db.");
- // });
+  //   console.log("Drop and re-sync db.");
+   //});
 const artists = require("./app/routes/artists.routes")
 artists(app);
 const albums = require("./app/routes/albums.routes")
