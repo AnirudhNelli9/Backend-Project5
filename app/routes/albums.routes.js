@@ -1,17 +1,13 @@
 module.exports = app => {
-  const lessons = require("../controllers/artist.controller.js");
-  var router = require("express").Router();
-  router.post("/artists/:artistId/albums", albums.create);
-  // Retrieve all Lessons for a Tutorial
-  router.get("/:tutorialId/lessons/", lessons.findAll);
-  router.get("/albums", albums.findAll);
-  // Retrieve a single Lesson with id
-  router.get("/:tutorialId/lessons/:id", lessons.findOne);
-  // Update a album with id
-  router.patch("/albums/:albumId", albums.update);
-  // Delete album with album id
-  router.delete("/albums/:albumId", albums.deleteAlbum);
-  // Delete all Lessons
-  router.delete("/albums/all", albums.deleteAll);
-  app.use('/api/tutorials', router);
-};
+    const albums = require("../controllers/album.controller.js");
+    var router = require("express").Router();
+    
+    router.post("/albums", albums.create);
+    router.get("/albums", albums.findAll);
+    router.get("/albums/:id", albums.findOne)
+    router.get("/artists/:artistId/albums", albums.getAlbumsByArtistId);
+    router.put("/albums/:id", albums.update);
+    router.delete("/albums/:id", albums.deleteAlbum);
+    router.delete("/albums", albums.deleteAll);
+    app.use('/api', router);
+  };
